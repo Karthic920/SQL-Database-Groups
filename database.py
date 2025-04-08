@@ -1,5 +1,7 @@
 import sqlite3
 
+print("shyssy baka")
+
 
 CREATE_BEANS_TABLE = "CREATE TABLE IF NOT EXISTS beans (id INTEGER PRIMARY KEY, name TEXT, method TEXT, rating INTEGER);"
 
