@@ -1,16 +1,16 @@
 import database
 
 MENU_PROMPT = """
--- Coffee Bean App --
+-- Movie Finder App --
 
 Please choose one of these options:
 
-1) Add a new bean.
-2) See all beans.
-3) Find a bean by name.
-4) See which preparation method is best for a bean.
-5) Select bean rating range.
-6) Delete bean.
+1) Add a new movie.
+2) See all movies.
+3) Find a movie by name.
+4) See which year the movie was made
+5) Select movie rating range.
+6) Delete movie.
 7) Exit.
 
 Your selection:"""
@@ -22,63 +22,63 @@ def menu():
 
     while (user_input := input(MENU_PROMPT)) != "7":
         if user_input == "1":
-            prompt_add_new_bean(connection)
+            prompt_add_new_movie(connection)
 
         elif  user_input == "2":
-            prompt_see_all_beans(connection)
+            prompt_see_all_movies(connection)
 
         elif  user_input == "3":
-            prompt_find_bean(connection)
+            prompt_find_movie(connection)
 
         elif  user_input == "4":
             prompt_find_best_method(connection)
 
         elif  user_input == "5":
-            prompt_bean_range(connection)
+            prompt_movie_range(connection)
 
         elif  user_input == "6":
-            prompt_delete_bean(connection)
+            prompt_delete_movie(connection)
 
         else:
             print("Invalid input, please try again!")
 
-def prompt_add_new_bean(connection):
-    name = input("Enter bean name: ")
-    method = input("Enter how you've prepared it: ")
+def prompt_add_new_movie(connection):
+    name = input("Enter movie name: ")
+    year = input("Enter the year it was published: ")
     rating = int(input("Enter your rating score (0-100): "))
 
-    database.add_bean(connection, name, method, rating)
+    database.add_movie(connection, name, year, rating)
 
-def prompt_see_all_beans(connection):
-    beans = database.get_all_beans(connection)
+def prompt_see_all_movies(connection):
+    movies = database.get_all_movies(connection)
 
-    for bean in beans:
-        print(f"{bean[1]} ({bean[2]}) - {bean[3]}/100")
+    for movie in movies:
+        print(f"{[1]} ({movie[2]}) - {movie[3]}/100")
 
-def prompt_find_bean(connection):
-    name = input("Enter bean name to find: ")
-    beans = database.get_beans_by_name(connection, name)
+def prompt_find_movie(connection):
+    name = input("Enter movie name to find: ")
+    movies = database.get_movies_by_name(connection, name)
 
-    for bean in beans:
-        print(f"{bean[1]} ({bean[2]}) - {bean[3]}/100")
+    for movie in movies:
+        print(f"{movie[1]} ({movie[2]}) - {movie[3]}/100")
 
 def prompt_find_best_method(connection):
-    name = input("Enter bean name to find: ")
-    best_method = database.get_best_perparation_for_bean(connection, name)
+    name = input("Enter movie name to find: ")
+    year = database.get_best_perparation_for_movie(connection, name)
 
-    print(f"The best preparation method for {name} is: {best_method[2]}")
+    print(f"The year {name} was published is: {year[2]}")
 
-def prompt_bean_range(connection):
-    range1 = int(input("What is the lowest rating of bean you would like?"))
-    range2 = int(input("What is the highest rating of bean you would like?"))
-    beans = database.get_bean_range(connection, range1, range2)
+def prompt_movie_range(connection):
+    range1 = int(input("What is the lowest rating of movie you would like?"))
+    range2 = int(input("What is the highest rating of movie you would like?"))
+    movies = database.get_movie_range(connection, range1, range2)
 
     print("\n")
 
-    for bean in beans:
-        print(f"{bean[1]} ({bean[2]}) - {bean[3]}/100")
+    for movie in movies:
+        print(f"{movie[1]} ({movie[2]}) - {movie[3]}/100")
 
-def prompt_delete_bean(connection):
+def prompt_delete_movie(connection):
     user_input = input("""Please choose one of these options:
 
     1) Delete by name.
@@ -87,12 +87,12 @@ def prompt_delete_bean(connection):
     Your selection:""")
 
     if user_input == "1":
-        name = input("Enter bean name to delete: ")
-        database.delete_bean_by_name(connection, name)
+        name = input("Enter movie name to delete: ")
+        database.delete_movie_by_name(connection, name)
 
     elif user_input == "2":
-        ID = int(input("Enter bean ID to delete: "))
-        database.delete_bean_by_id(connection, ID)
+        ID = int(input("Enter movie ID to delete: "))
+        database.delete_movie_by_id(connection, ID)
 
 
 menu()
