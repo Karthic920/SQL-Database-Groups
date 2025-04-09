@@ -11,8 +11,9 @@ Please choose one of these options:
 4) See which year the movie was made
 5) Select movie rating range.
 6) Find movie by lead actor or director
-7) Delete movie.
-8) Exit.
+7) Find movies by series
+8) Delete movie
+9) Exit.
 
 Your selection:"""
 
@@ -21,7 +22,7 @@ def menu():
     connection = database.connect()
     database.create_tables(connection)
 
-    while (user_input := input(MENU_PROMPT)) != "8":
+    while (user_input := input(MENU_PROMPT)) != "9":
         if user_input == "1":
             prompt_add_new_movie(connection)
 
@@ -39,7 +40,11 @@ def menu():
 
         elif  user_input == "6":
             prompt_find_movie_actor_or_director(connection)
+            
         elif user_input == "7":
+            prompt_find_movie_series(connection)
+            
+        elif user_input == "8":
             prompt_delete_movie(connection)
 
         else:
@@ -110,6 +115,18 @@ def prompt_find_movie_actor_or_director(connection):
         else:
             print("Bruh enter an actual option")
             return
+        
+def prompt_find_movie_series(connection):
+    user_input = input("""
+    What is the name of the movie franchise?
+    (EX: "Hunger games 1, Hunger games 2, Hunger games 3)
+    (Movie franchise name is: Hunger games)""")
+    
+    movies = database.get_movie_series(connection, user_input)
+
+    for movie in movies:
+        print(f"{movie[1]} ({movie[2]}), actor: {movie[3]}, director: {movie[4]} - {movie[5]}/100")
+
 
 def prompt_delete_movie(connection):
     user_input = input("""Please choose one of these options:
