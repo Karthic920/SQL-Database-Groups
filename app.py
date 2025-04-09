@@ -46,11 +46,19 @@ def menu():
             print("Invalid input, please try again!")
 
 def prompt_add_new_movie(connection):
-    name = input("Enter movie name: ")
-    year = input("Enter the year it was published: ")
-    actor = input("Enter lead actor: ")
-    director = input("Enter director: ")
-    rating = int(input("Enter your rating score (0-100): "))
+    while True:
+        name = input("Enter movie name: ")
+        year = input("Enter the year it was published: ")
+        actor = input("Enter lead actor: ")
+        director = input("Enter director: ")
+        rating = input("Enter your rating score (0-100): ")
+        if rating.isdigit() and year.isdigit():
+            year = int(year)
+            rating = int(rating)
+            break
+        else:
+            print("Make sure year and rating are integer values!")
+
 
     database.add_movie(connection, name, year, actor, director, rating)
 
