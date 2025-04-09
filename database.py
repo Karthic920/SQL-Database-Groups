@@ -1,7 +1,7 @@
 import sqlite3
 
 
-CREATE_MOVIES_TABLE = "CREATE TABLE IF NOT EXISTS movies (id INTEGER PRIMARY KEY, name TEXT, year TEXT, actor TEXT, director TEXT, rating INTEGER);"
+CREATE_MOVIES_TABLE = "CREATE TABLE IF NOT EXISTS movies (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, actor TEXT, director TEXT, rating INTEGER);"
 
 INSERT_MOVIE = "INSERT INTO movies(name, year, actor, director, rating) VALUES (?, ?, ?, ?, ?);"
 
@@ -26,6 +26,12 @@ SELECT * FROM movies
 WHERE director = ?
 ORDER BY rating DESC
 """
+
+GET_MOVIE_SERIES = """
+SELECT * FROM movies
+WHERE name = ?%
+ORDER BY year ASC
+LIMIT 1;"""
 
 DELETE_MOVIE_BY_NAME = """
 DELETE FROM movies
@@ -73,6 +79,10 @@ def get_movie_by_actor(connection, actor):
 def get_movie_by_director(connection, director):
     with connection:
         return connection.execute(GET_MOVIE_BY_DIRECTOR, (director,)).fetchall()
+    
+def get_movie_series(connection, name):
+    with connection:
+        return connection.execute(GET_MOVIE_SERIES, (name,)).fetchone()
 
 def delete_movie_by_name(connection, name):
     with connection:
