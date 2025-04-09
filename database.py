@@ -15,6 +15,18 @@ LIMIT 1;"""
 
 GET_MOVIE_RANGE = "SELECT * FROM movies WHERE rating >= ? AND ? >= rating ORDER BY rating DESC"
 
+GET_MOVIE_BY_ACTOR = """
+SELECT * FROM movies
+WHERE actor = ?
+ORDER BY rating DESC
+"""
+
+GET_MOVIE_BY_DIRECTOR = """
+SELECT * FROM movies
+WHERE director = ?
+ORDER BY rating DESC
+"""
+
 DELETE_MOVIE_BY_NAME = """
 DELETE FROM movies
 WHERE name = ? """
@@ -53,6 +65,14 @@ def get_movie_year(connection, name):
 def get_movie_range(connection, range1, range2):
     with connection:
         return connection.execute(GET_MOVIE_RANGE, (range1, range2)).fetchall()
+
+def get_movie_by_actor(connection, actor):
+    with connection:
+        return connection.execute(GET_MOVIE_BY_ACTOR, (actor,)).fetchall()
+
+def get_movie_by_director(connection, director):
+    with connection:
+        return connection.execute(GET_MOVIE_BY_DIRECTOR, (director,)).fetchall()
 
 def delete_movie_by_name(connection, name):
     with connection:
