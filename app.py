@@ -25,26 +25,25 @@ def menu():
         if user_input == "1":
             prompt_add_new_movie(connection)
 
-        elif user_input == "2":
+        elif  user_input == "2":
             prompt_see_all_movies(connection)
 
-        elif user_input == "3":
+        elif  user_input == "3":
             prompt_find_movie(connection)
 
-        elif user_input == "4":
+        elif  user_input == "4":
             prompt_find_movie_year(connection)
 
-        elif user_input == "5":
+        elif  user_input == "5":
             prompt_movie_range(connection)
 
-        elif user_input == "6":
+        elif  user_input == "6":
             prompt_find_movie_actor_or_director(connection)
         elif user_input == "7":
             prompt_delete_movie(connection)
 
         else:
             print("Invalid input, please try again!")
-
 
 def prompt_add_new_movie(connection):
     name = input("Enter movie name: ")
@@ -55,13 +54,11 @@ def prompt_add_new_movie(connection):
 
     database.add_movie(connection, name, year, actor, director, rating)
 
-
 def prompt_see_all_movies(connection):
     movies = database.get_all_movies(connection)
 
     for movie in movies:
         print(f"{movie[1]} ({movie[2]}), actor: {movie[3]}, director: {movie[4]} - {movie[5]}/100")
-
 
 def prompt_find_movie(connection):
     name = input("Enter movie name to find: ")
@@ -70,13 +67,11 @@ def prompt_find_movie(connection):
     for movie in movies:
         print(f"{movie[1]} ({movie[2]}), actor: {movie[3]}, director: {movie[4]} - {movie[5]}/100")
 
-
 def prompt_find_movie_year(connection):
     name = input("Enter movie name to find: ")
     year = database.get_movie_year(connection, name)
 
     print(f"The year {name} was published is: {year[2]}")
-
 
 def prompt_movie_range(connection):
     range1 = int(input("What is the lowest rating of movie you would like?"))
@@ -88,28 +83,25 @@ def prompt_movie_range(connection):
     for movie in movies:
         print(f"{movie[1]} ({movie[2]}), actor: {movie[3]}, director: {movie[4]} - {movie[5]}/100")
 
-
 def prompt_find_movie_actor_or_director(connection):
-    user_input = input("""Please choose one of these options:
+    user_input = input("Would you like to find the movie by actor or director?\n(1 for actor, 2 for director): ")
+    while True:
+        if user_input == "1":
+            actor_name = input("What is the lead actors name?: ")
+            movies = database.get_movie_by_actor(connection, actor_name)
 
-       1) Find by actor.
-       2) Find by director.
-
-       Your selection:""")
-
-    if user_input == "1":
-        actor_name = input("What is the lead actors name?: ")
-        movies = database.get_movie_by_actor(connection, actor_name)
-
-        for movie in movies:
-            print(f"{movie[1]} ({movie[2]}), actor: {movie[3]}, director: {movie[4]} - {movie[5]}/100")
-
-    elif user_input == "2":
-        director_name = input("What is the directors name?: ")
-        movies = database.get_movie_by_director(connection, director_name)
-        for movie in movies:
-            print(f"{movie[1]} ({movie[2]}), actor: {movie[3]}, director: {movie[4]} - {movie[5]}/100")
-
+            for movie in movies:
+                print(f"{movie[1]} ({movie[2]}), actor: {movie[3]}, director: {movie[4]} - {movie[5]}/100")
+            break
+        elif user_input == "2":
+            director_name = input("What is the directors name?: ")
+            movies = database.get_movie_by_director(connection, director_name)
+            for movie in movies:
+                print(f"{movie[1]} ({movie[2]}), actor: {movie[3]}, director: {movie[4]} - {movie[5]}/100")
+            break
+        else:
+            print("Bruh enter an actual option")
+            return
 
 def prompt_delete_movie(connection):
     user_input = input("""Please choose one of these options:
