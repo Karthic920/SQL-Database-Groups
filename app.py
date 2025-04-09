@@ -17,6 +17,11 @@ Please choose one of these options:
 
 Your selection:"""
 
+def pause():
+    input("Press enter to continue: ")
+def wipe_movies():
+    open('data.db', 'w').close()
+
 
 def menu():
     connection = database.connect()
@@ -25,27 +30,35 @@ def menu():
     while (user_input := input(MENU_PROMPT)) != "9":
         if user_input == "1":
             prompt_add_new_movie(connection)
+            pause()
 
-        elif  user_input == "2":
+        elif user_input == "2":
             prompt_see_all_movies(connection)
+            pause()
 
         elif  user_input == "3":
             prompt_find_movie(connection)
+            pause()
 
         elif  user_input == "4":
             prompt_find_movie_year(connection)
+            pause()
 
         elif  user_input == "5":
             prompt_movie_range(connection)
+            pause()
 
         elif  user_input == "6":
             prompt_find_movie_actor_or_director(connection)
-            
+            pause()
+
         elif user_input == "7":
             prompt_find_movie_series(connection)
-            
+            pause()
+
         elif user_input == "8":
             prompt_delete_movie(connection)
+            pause()
 
         else:
             print("Invalid input, please try again!")
@@ -115,13 +128,10 @@ def prompt_find_movie_actor_or_director(connection):
         else:
             print("Bruh enter an actual option")
             return
-        
+
 def prompt_find_movie_series(connection):
-    user_input = input("""
-    What is the name of the movie franchise?
-    (EX: "Hunger games 1, Hunger games 2, Hunger games 3)
-    (Movie franchise name is: Hunger games)""")
-    
+    user_input = input("What is the name of the movie franchise?\n(EX: 'Hunger games 1, Hunger games 2, Hunger games 3'\nThe Movie franchise name is: Hunger games):")
+
     movies = database.get_movie_series(connection, user_input)
 
     for movie in movies:
