@@ -29,7 +29,7 @@ ORDER BY rating DESC
 
 GET_MOVIE_SERIES = """
 SELECT * FROM movies
-WHERE name = %?%
+WHERE name LIKE ?
 ORDER BY year ASC
 ;"""
 
@@ -82,7 +82,8 @@ def get_movie_by_director(connection, director):
 
 def get_movie_series(connection, name):
     with connection:
-        return connection.execute(GET_MOVIE_SERIES, (name,)).fetchone()
+        search_pattern = f"%{name}%"
+        return connection.execute(GET_MOVIE_SERIES, (search_pattern,)).fetchall()
 
 def delete_movie_by_name(connection, name):
     with connection:
