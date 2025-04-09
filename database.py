@@ -3,11 +3,11 @@ import sqlite3
 
 CREATE_MOVIES_TABLE = "CREATE TABLE IF NOT EXISTS movies (id INTEGER PRIMARY KEY, name TEXT, year TEXT, actor TEXT, director TEXT, rating INTEGER);"
 
-INSERT_MOVIE = "INSERT INTO movies(name, year, actor, director, rating) VALUES (?, ?, ?);"
+INSERT_MOVIE = "INSERT INTO movies(name, year, actor, director, rating) VALUES (?, ?, ?, ?, ?);"
 
 GET_ALL_MOVIES = "SELECT * FROM movies;"
 GET_MOVIES_BY_NAME = "SELECT * FROM movies WHERE name = ?;"
-GET_MOVIE = """
+GET_MOVIE_YEAR = """
 SELECT * FROM movies
 WHERE name = ?
 ORDER BY rating DESC
@@ -33,9 +33,9 @@ def create_tables(connection):
         connection.execute(CREATE_MOVIES_TABLE)
 
 
-def add_movie(connection, name, year, rating):
+def add_movie(connection, name, year, actor, director, rating):
     with connection:
-        connection.execute(INSERT_MOVIE, (name, year, rating))
+        connection.execute(INSERT_MOVIE, (name, year, actor, director, rating))
 
 
 def get_all_movies(connection):
@@ -46,9 +46,9 @@ def get_movies_by_name(connection, name):
     with connection:
         return connection.execute(GET_MOVIES_BY_NAME, (name,)).fetchall()
 
-def get_movie(connection, name):
+def get_movie_year(connection, name):
     with connection:
-        return connection.execute(GET_MOVIE, (name,)).fetchone()
+        return connection.execute(GET_MOVIE_YEAR, (name,)).fetchone()
 
 def get_movie_range(connection, range1, range2):
     with connection:
