@@ -17,13 +17,13 @@ GET_MOVIE_RANGE = "SELECT * FROM movies WHERE rating >= ? AND ? >= rating ORDER 
 
 GET_MOVIE_BY_ACTOR = """
 SELECT * FROM movies
-WHERE actor = ?
+WHERE actor LIKE ?
 ORDER BY rating DESC
 """
 
 GET_MOVIE_BY_DIRECTOR = """
 SELECT * FROM movies
-WHERE director = ?
+WHERE director LIKE ?
 ORDER BY rating DESC
 """
 
@@ -74,10 +74,12 @@ def get_movie_range(connection, range1, range2):
 
 def get_movie_by_actor(connection, actor):
     with connection:
+        actor = f"%{actor}%"
         return connection.execute(GET_MOVIE_BY_ACTOR, (actor,)).fetchall()
 
 def get_movie_by_director(connection, director):
     with connection:
+        director = f"%{director}%"
         return connection.execute(GET_MOVIE_BY_DIRECTOR, (director,)).fetchall()
 
 def get_movie_series(connection, name):
