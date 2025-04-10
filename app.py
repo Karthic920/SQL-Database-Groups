@@ -85,19 +85,27 @@ def prompt_see_all_movies(connection):
 
     for movie in movies:
         print(f"{movie[1]} ({movie[2]}), actor: {movie[3]}, director: {movie[4]} - {movie[5]}/100")
-    pause()
 
 def prompt_find_movie(connection):
     name = input("Enter movie name to find: ")
     movies = database.get_movies_by_name(connection, name)
 
+    if not movies:
+        print(f"No movie found with the name '{name}'.")
+        add_movie = input("Would you like to add it to the database? (y/n): ").lower()
+        if add_movie == "y" or add_movie == "Y":
+            prompt_add_new_movie(connection)
+        return
+
     for movie in movies:
         print(f"{movie[1]} ({movie[2]}), actor: {movie[3]}, director: {movie[4]} - {movie[5]}/100")
-    pause()
 
 def prompt_find_movie_year(connection):
     name = input("Enter movie name to find: ")
     year = database.get_movie_year(connection, name)
+
+    if year is None:
+        print(f"No movie found with the name '{name}'.")
 
     print(f"The year {name} was published is: {year[2]}")
 
@@ -123,15 +131,21 @@ def prompt_find_movie_actor_or_director(connection):
             actor_name = input("What is the lead actors name?: ")
             movies = database.get_movie_by_actor(connection, actor_name)
 
+            if not movies:
+                print(f"No movies found for {actor_name}.")
+
             for movie in movies:
                 print(f"{movie[1]} ({movie[2]}), actor: {movie[3]}, director: {movie[4]} - {movie[5]}/100")
             break
         elif user_input == "2":
             director_name = input("What is the directors name?: ")
             movies = database.get_movie_by_director(connection, director_name)
+
+            if not movies:
+                print(f"No movies found for {director_name}.")
+
             for movie in movies:
                 print(f"{movie[1]} ({movie[2]}), actor: {movie[3]}, director: {movie[4]} - {movie[5]}/100")
-            pause()
             break
         else:
             print("Bruh enter an actual option")
@@ -145,7 +159,6 @@ def prompt_find_movie_series(connection):
 
     for movie in movies:
         print(f"{movie[1]} ({movie[2]}), actor: {movie[3]}, director: {movie[4]} - {movie[5]}/100")
-    pause()
 
 def prompt_delete_movie(connection):
     user_input = input("""Please choose one of these options:
