@@ -85,6 +85,7 @@ def prompt_see_all_movies(connection):
 
     for movie in movies:
         print(f"{movie[1]} ({movie[2]}), actor: {movie[3]}, director: {movie[4]} - {movie[5]}/100")
+    pause()
 
 def prompt_find_movie(connection):
     name = input("Enter movie name to find: ")
@@ -92,6 +93,7 @@ def prompt_find_movie(connection):
 
     for movie in movies:
         print(f"{movie[1]} ({movie[2]}), actor: {movie[3]}, director: {movie[4]} - {movie[5]}/100")
+    pause()
 
 def prompt_find_movie_year(connection):
     name = input("Enter movie name to find: ")
@@ -110,7 +112,12 @@ def prompt_movie_range(connection):
         print(f"{movie[1]} ({movie[2]}), actor: {movie[3]}, director: {movie[4]} - {movie[5]}/100")
 
 def prompt_find_movie_actor_or_director(connection):
-    user_input = input("Would you like to find the movie by actor or director?\n(1 for actor, 2 for director): ")
+    user_input = input("""Please choose one of these options:
+
+        1) Find by Actor.
+        2) Find by Director.
+
+        Your selection:""")
     while True:
         if user_input == "1":
             actor_name = input("What is the lead actors name?: ")
@@ -124,6 +131,7 @@ def prompt_find_movie_actor_or_director(connection):
             movies = database.get_movie_by_director(connection, director_name)
             for movie in movies:
                 print(f"{movie[1]} ({movie[2]}), actor: {movie[3]}, director: {movie[4]} - {movie[5]}/100")
+            pause()
             break
         else:
             print("Bruh enter an actual option")
@@ -131,12 +139,13 @@ def prompt_find_movie_actor_or_director(connection):
 
 def prompt_find_movie_series(connection):
     user_input = input("What is the name of the movie franchise?\n(EX: 'Hunger games 1, Hunger games 2, Hunger games 3'\nThe Movie franchise name is: Hunger games):")
+    print("\n\n")
 
     movies = database.get_movie_series(connection, user_input)
 
     for movie in movies:
         print(f"{movie[1]} ({movie[2]}), actor: {movie[3]}, director: {movie[4]} - {movie[5]}/100")
-
+    pause()
 
 def prompt_delete_movie(connection):
     user_input = input("""Please choose one of these options:
