@@ -1,4 +1,5 @@
-import sqlite3
+
+import sqlite3, csv
 
 
 CREATE_MOVIES_TABLE = "CREATE TABLE IF NOT EXISTS movies (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, actor TEXT, director TEXT, rating INTEGER);"
@@ -40,6 +41,11 @@ WHERE name = ? """
 DELETE_MOVIE_BY_ID = """
 DELETE FROM movies
 WHERE id = ?  """
+
+GET_TOP_MOVIES = """
+SELECT * FROM movies
+ORDER BY rating DESC
+LIMIT 5;"""
 
 
 def connect():
@@ -94,3 +100,31 @@ def delete_movie_by_name(connection, name):
 def delete_movie_by_id(connection, movie_id):
     with connection:
         connection.execute(DELETE_MOVIE_BY_ID, (movie_id,))
+
+def export_movies_to_csv(connection, filename='movies_export.csv'):
+    movies = get_all_movies(connection)
+    
+    # Export movies to CSV file, with UTF-8 encoding
+    with open(filename, mode="w", newline="", encoding="utf-8") as file:
+        writer = csv.writer(file)
+        writer.writerow(["ID", "Name", "Year", "Actor", "Director", "Rating"])
+        writer.writerows(movies)
+
+def import_movies_from_csv(connection, filename):
+    with open(filename, mode="r", newline="", encoding="utf-8") as file:
+        reader = csv.reader(file)
+        next(reader)  # Skip the header row
+        for row in reader:
+            try:
+                # Assuming CSV has the same structure: ID, Name, Year, Actor, Director, Rating
+                name, year, actor, director, rating = row[1], int(row[2]), row[3], row[4], int(row[5])
+                add_movie(connection, name, year, actor, director, rating)
+                
+            except (IndexError) as e:
+                print(f"Skipping row due to error: {e}")  
+            except (ValueError) as e:
+                print(f"Skipping row due to error: {e}")
+
+def get_top_movies(connection):
+    with connection:
+        return connection.execute(GET_TOP_MOVIES).fetchall()
