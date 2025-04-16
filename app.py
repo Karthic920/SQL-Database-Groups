@@ -1,5 +1,4 @@
-import database
-
+import database, csv
 MENU_PROMPT = """
 -- Movie Finder App --
 
@@ -13,7 +12,10 @@ Please choose one of these options:
 6) Find movie by lead actor or director
 7) Find movies by series
 8) Delete movie
-9) Exit.
+9) Export movies to CSV
+10) Import movies from CSV
+11) Show top 5 rated movies
+12) Exit
 
 Your selection:"""
 
@@ -27,7 +29,7 @@ def menu():
     connection = database.connect()
     database.create_tables(connection)
 
-    while (user_input := input(MENU_PROMPT)) != "9":
+    while (user_input := input(MENU_PROMPT)) != "12":
         if user_input == "1":
             prompt_add_new_movie(connection)
             pause()
@@ -59,7 +61,15 @@ def menu():
         elif user_input == "8":
             prompt_delete_movie(connection)
             pause()
-
+        elif user_input == "9":
+            prompt_export_to_csv(connection)
+            pause()
+        elif user_input == "10":
+            prompt_import_from_csv(connection)
+            pause()
+        elif user_input == "11":
+            prompt_get_top_movies(connection)
+            pause()
         else:
             print("Invalid input, please try again!")
 
@@ -73,6 +83,10 @@ def prompt_add_new_movie(connection):
         if rating.isdigit() and year.isdigit():
             year = int(year)
             rating = int(rating)
+
+            if not (0 <= rating <= 100):
+                print("Rating must be between 0 and 100.")
+                continue
             break
         else:
             print("Make sure year and rating are integer values!")
@@ -176,5 +190,24 @@ def prompt_delete_movie(connection):
         ID = int(input("Enter movie ID to delete: "))
         database.delete_movie_by_id(connection, ID)
 
+def prompt_export_to_csv(connection):
+    database.export_movies_to_csv(connection)
+    print("Movies exported to 'movies_export.csv'")
+
+def prompt_import_from_csv(connection):
+    filename = input("Enter the filename to import from: ")
+    try:
+        database.import_movies_from_csv(connection, filename)
+        print(f"Movies imported successfully from '{filename}'.")
+    except FileNotFoundError:
+        print(f"File '{filename}' not found. Make sure it's in the same folder.")
+
+
+def prompt_get_top_movies(connection):
+    movies = database.get_top_movies(connection)
+    print("Top 5 movies are:\n")
+
+    for movie in movies:
+        print(f"{movie[1]} ({movie[2]}), actor: {movie[3]}, director: {movie[4]} - {movie[5]}/100")
 
 menu()
