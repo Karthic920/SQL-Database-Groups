@@ -15,7 +15,8 @@ Please choose one of these options:
 9) Export movies to CSV
 10) Import movies from CSV
 11) Show top 5 rated movies
-12) Exit
+12) Clear your table :)
+13) Exit
 
 Your selection:"""
 
@@ -29,7 +30,7 @@ def menu():
     connection = database.connect()
     database.create_tables(connection)
 
-    while (user_input := input(MENU_PROMPT)) != "12":
+    while (user_input := input(MENU_PROMPT)) != "13":
         if user_input == "1":
             prompt_add_new_movie(connection)
             pause()
@@ -69,6 +70,9 @@ def menu():
             pause()
         elif user_input == "11":
             prompt_get_top_movies(connection)
+            pause()
+        elif user_input == "12":
+            prompt_clear_table(connection)
             pause()
         else:
             print("Invalid input, please try again!")
@@ -209,5 +213,8 @@ def prompt_get_top_movies(connection):
 
     for movie in movies:
         print(f"{movie[1]} ({movie[2]}), actor: {movie[3]}, director: {movie[4]} - {movie[5]}/100")
+def prompt_clear_table(connection):
+    database.clear_table(connection)
+    print("Movies successfully cleared :))))")
 
 menu()
