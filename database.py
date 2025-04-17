@@ -1,6 +1,4 @@
-
 import sqlite3, csv
-
 
 CREATE_MOVIES_TABLE = "CREATE TABLE IF NOT EXISTS movies (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, actor TEXT, director TEXT, rating INTEGER);"
 
@@ -66,49 +64,59 @@ def get_all_movies(connection):
     with connection:
         return connection.execute(GET_ALL_MOVIES).fetchall()
 
+
 def get_movies_by_name(connection, name):
     with connection:
         return connection.execute(GET_MOVIES_BY_NAME, (name,)).fetchall()
+
 
 def get_movie_year(connection, name):
     with connection:
         return connection.execute(GET_MOVIE_YEAR, (name,)).fetchone()
 
+
 def get_movie_range(connection, range1, range2):
     with connection:
         return connection.execute(GET_MOVIE_RANGE, (range1, range2)).fetchall()
+
 
 def get_movie_by_actor(connection, actor):
     with connection:
         actor = f"%{actor}%"
         return connection.execute(GET_MOVIE_BY_ACTOR, (actor,)).fetchall()
 
+
 def get_movie_by_director(connection, director):
     with connection:
         director = f"%{director}%"
         return connection.execute(GET_MOVIE_BY_DIRECTOR, (director,)).fetchall()
+
 
 def get_movie_series(connection, name):
     with connection:
         search_pattern = f"%{name}%"
         return connection.execute(GET_MOVIE_SERIES, (search_pattern,)).fetchall()
 
+
 def delete_movie_by_name(connection, name):
     with connection:
         connection.execute(DELETE_MOVIE_BY_NAME, (name,))
+
 
 def delete_movie_by_id(connection, movie_id):
     with connection:
         connection.execute(DELETE_MOVIE_BY_ID, (movie_id,))
 
+
 def export_movies_to_csv(connection, filename='movies_export.csv'):
     movies = get_all_movies(connection)
-    
+
     # Export movies to CSV file, with UTF-8 encoding
     with open(filename, mode="w", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
         writer.writerow(["ID", "Name", "Year", "Actor", "Director", "Rating"])
         writer.writerows(movies)
+
 
 def import_movies_from_csv(connection, filename):
     with open(filename, mode="r", newline="", encoding="utf-8") as file:
@@ -119,12 +127,17 @@ def import_movies_from_csv(connection, filename):
                 # Assuming CSV has the same structure: ID, Name, Year, Actor, Director, Rating
                 name, year, actor, director, rating = row[1], int(row[2]), row[3], row[4], int(row[5])
                 add_movie(connection, name, year, actor, director, rating)
-                
+
             except (IndexError) as e:
-                print(f"Skipping row due to error: {e}")  
+                print(f"Skipping row due to error: {e}")
             except (ValueError) as e:
                 print(f"Skipping row due to error: {e}")
+
 
 def get_top_movies(connection):
     with connection:
         return connection.execute(GET_TOP_MOVIES).fetchall()
+
+def clear_table(connection):
+    with connection:
+        connection.execute("DELETE FROM movies;")
